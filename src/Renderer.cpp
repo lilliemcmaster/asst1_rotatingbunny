@@ -10,6 +10,9 @@ nanogui::Screen* Renderer::m_nanogui_screen = nullptr;
 
 bool Renderer::keys[1024];
 
+int a = 0;
+int b = 0;
+
 Renderer::Renderer() {}
 Renderer::~Renderer() {}
 
@@ -35,14 +38,23 @@ void Renderer::nanogui_init(GLFWwindow* window) {
 
 	//////////
 	// Task 4: Create user-interaction controls here
-	// Allow users to interactively rotate the bunny around 
-	// the global y-axis of world coordinate system (WCS) 
-	// and rotate around its own x-axis of local coordinate system (LCS).
-
-
+	nanogui::FormHelper *gui_2 = new nanogui::FormHelper(m_nanogui_screen);
+	nanogui::ref<nanogui::Window> nanoguiWindow_2 = gui_2->addWindow(Eigen::Vector2i(0, 200), "Nanogui control bar_2");
+	gui_2->addGroup("Bunny Position");
+	gui_2->addVariable("X",a)->setSpinnable(true);
+	gui_2->addVariable("Y",b)->setSpinnable(true);
+	gui_2->addButton("Rotate X Local", []() {
+		m_animation->rotateX(a);
+	});
+		gui_2->addButton("Rotate Y Global", []() {
+		m_animation->rotateY(b);
+	});
 	//////////
 	// Task 5: Reset
-	// Have a “Reset” button that can reset the bunny to the initial state
+	gui_2->addButton("Reset Bunny", []() {
+		m_animation->reset();
+	});
+
 
 	m_nanogui_screen->setVisible(true);
 	m_nanogui_screen->performLayout();
@@ -158,7 +170,7 @@ void Renderer::load_models() {
 	// TODO: replace hard-coded path!!!!
 	obj_list.clear();
 	Object main_object("../src/objs/bunny.obj");
-	main_object.obj_color = glm::vec4(0.7f, 0.7f, 0.7f, 1.0f);
+	main_object.obj_color = glm::vec4(0.7f, 0.7f, 0.7f, 1.0f); //main bunny object set to a default position
 	main_object.obj_name = "main_object";
 
 	Object plane_object("../src/objs/plane.obj");
@@ -195,7 +207,7 @@ void Renderer::draw_scene(Shader& shader) {
 
 		if (obj_list[i].obj_name == "main_object") {
 			// Before draw the model, change its model mat
-			glm::mat4 main_object_model_mat =  glm::mat4(1.0f);
+			glm::mat4 main_object_model_mat =  glm::mat4(1.0f); //identity matrix
 
 			m_animation->update(delta_time);
 

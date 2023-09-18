@@ -15,6 +15,9 @@ public:
 	void update(float delta_time);
 	void reset();
 	glm::mat4 get_model_mat() { return m_model_mat; };
+	void rotateX(float angle);
+	void rotateY(float angle);
+	
 
 	//////////
 	// Task 3: define rotation variables/functions here
